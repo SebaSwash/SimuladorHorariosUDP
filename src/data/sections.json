@@ -1,0 +1,76 @@
+{
+    "sections": [
+        {
+            "id": 0,
+            "subjectId": "0",
+            "teacher": "Jorge Elliott",
+            "code": "01",
+            "days": [2, 5],
+            "blockId": 2,
+            "helpClass": {
+                "helper": "Ayudante de Elliott",
+                "days": [1],
+                "blockId": 2
+            },
+            "visible": 1
+        },
+        {
+            "id": 1,
+            "subjectId": "0",
+            "teacher": "Elliott Jorge",
+            "code": "02",
+            "days": [1, 4],
+            "blockId": 2,
+            "helpClass": {
+                "helper": "Otro ayudante de Elliott",
+                "days": [1],
+                "blockId": 2
+            },
+            "visible": 1
+        },
+        {
+            "id": 2,
+            "subjectId": "1",
+            "teacher": "Alessio Bellino",
+            "code": "01",
+            "days": [2, 5],
+            "blockId": 5,
+            "helpClass": null,
+            "visible": 1
+        },
+        {
+            "id": 3,
+            "subjectId": "1",
+            "teacher": "Bellino Alessio",
+            "code": "02",
+            "days": [2, 3],
+            "blockId": 1,
+            "helpClass": {
+                "helper": "Ayudante de Alessio",
+                "days": [1],
+                "blockId": 3
+            },
+            "visible": 1
+        },
+        {
+            "id": 4,
+            "subjectId": "2",
+            "teacher": "Rodrigo Muñoz",
+            "code": "01",
+            "days": [2, 5],
+            "blockId": 0,
+            "helpClass": null,
+            "visible": 1
+        },
+        {
+            "id": 5,
+            "subjectId": "3",
+            "teacher": "Luciano Ahumada",
+            "code": "01",
+            "days": [2, 5],
+            "blockId": 5,
+            "helpClass": null,
+            "visible": 1
+        }
+    ]
+}

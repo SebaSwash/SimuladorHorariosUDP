@@ -1,0 +1,18 @@
+{
+    "0": {
+        "name": "Evaluación de Proyectos TICs",
+        "code": "CIT-2207"
+    },
+    "1": {
+        "name": "Diseño y Desarrollo de Sistemas Interactivos",
+        "code": "CIT-3347"
+    },
+    "2": {
+        "name": "Comunicaciones Satelitales",
+        "code": "CIT-3432"
+    },
+    "3": {
+        "name": "Interoperabilidad y Sistemas de Telecomunicaciones",
+        "code": "CIT-3433"
+    }
+}
