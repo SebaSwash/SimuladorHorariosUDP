@@ -1,8 +1,7 @@
 import {useContext} from 'react';
 import mainStyles from '../../styles/main';
-import {Card, Table} from 'react-bootstrap';
-
-import { SubjectsContext, HelperClassesContext} from '../../App';
+import {Card, Table, Button, Row, Col} from 'react-bootstrap';
+import { SubjectsContext, HelperClassesContext, AvailableSectionsContext} from '../../App';
 
 // Importación de módulos / componentes
 import SectionCard from './section-card';
@@ -13,6 +12,46 @@ import blocks from '../../data/blocks.json';
 export default function Calendar () {
     const selectedSubjects = useContext(SubjectsContext);
     const selectedHelperClasses = useContext(HelperClassesContext);
+    const availableSections = useContext(AvailableSectionsContext);
+
+    /* Función para limpiar todas las secciones seleccionadas del calendario */
+    const cleanCalendar = () => {
+        // Se obtienen todas las asignaturas seleccionadas y se devuelven a la lista de secciones disponibles
+
+        let tempAvailables = [];
+
+        Object.keys(selectedSubjects.data).forEach((blockId) => {
+            selectedSubjects.data[blockId].forEach((section) => {
+                tempAvailables.push(section);
+            });
+        });
+
+        availableSections.updater([...availableSections.data, ...tempAvailables]);
+
+        // Se limpia la lista de secciones seleccionadas
+        selectedSubjects.updater({
+            0: [], // inicio 08:30
+            1: [], // inicio 10:00
+            2: [], // inicio 11:30
+            3: [], // inicio 13:00
+            4: [], // inicio 14:30
+            5: [], // inicio 15:50
+            6: [], // inicio 16:00
+            7: [] // inicio 17:30
+        });
+
+        // Se limpia la lista de ayudantías (según las secciones seleccionadas)
+        selectedHelperClasses.updater({
+            0: [], // inicio 08:30
+            1: [], // inicio 10:00
+            2: [], // inicio 11:30
+            3: [], // inicio 13:00
+            4: [], // inicio 14:30
+            5: [], // inicio 15:50
+            6: [], // inicio 16:00
+            7: [] // inicio 17:30
+        });
+    };
 
     return <>
         <Card style={mainStyles.card}>
@@ -20,6 +59,13 @@ export default function Calendar () {
                 <div className="text-center">Horario semanal</div>
             </Card.Header>
             <Card.Body>
+            <Row className="mb-2">
+                <Col className="pull-right">
+                    <Button className="btn-sm btn-danger float-end" onClick={() => cleanCalendar()}>
+                        Limpiar
+                    </Button>
+                </Col>
+            </Row>
             <Table responsive striped bordered hover>
                     <thead>
                             <tr>

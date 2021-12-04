@@ -1,17 +1,22 @@
 import {useContext, useState} from 'react';
 import {SubjectsContext, HelperClassesContext, AvailableSectionsContext} from '../../App';
-import {Card, ListGroup, FormControl, InputGroup, Alert, Badge} from 'react-bootstrap';
+import {Card, ListGroup, FormControl, InputGroup, Alert} from 'react-bootstrap';
 import mainStyles from '../../styles/main';
 
-// import 'sweetalert2/src/sweetalert2.scss'
-// import Swal from 'sweetalert2/src/sweetalert2.js';
+// React Notifications
+import 'react-notifications/lib/notifications.css';
+import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 // Importación de datos para secciones / asignaturas
 import blocks from '../../data/blocks.json';
 import subjects from '../../data/subjects.json';
 
 // Utils
-import {generateRandomHexColor, getBrightness, hexToRgb, getSimilarityScore} from '../../utils/hex-color';
+import { sectionsCollision } from '../../utils/verifications';
+import {generateRandomHexColor, hexToRgb, getSimilarityScore} from '../../utils/hex-color';
+
+// Importación de sección con las asignaturas seleccionadas
+import SelectedSections from './selected-sections';
 
 export default function SubjectSelector () {
     const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -92,16 +97,13 @@ export default function SubjectSelector () {
         let rgbColor = hexToRgb(cardColor);
 
         if (prevRgbColor) {
-            while (getSimilarityScore([rgbColor.r, rgbColor.g, rgbColor.b], [prevRgbColor.r, prevRgbColor.g, prevRgbColor.b]) >= 80) {
+            while (getSimilarityScore([rgbColor.r, rgbColor.g, rgbColor.b], [prevRgbColor.r, prevRgbColor.g, prevRgbColor.b]) > 100) {
                 cardColor = generateRandomHexColor();
                 rgbColor = hexToRgb(cardColor);
             }
         }
 
         setPrevRgbColor(rgbColor);
-
-
-        const cardColorBrightness = getBrightness(cardColor);
 
         // Se elimina la sección de las secciones disponibles
         let tempNewAvailableSections = availableSections.data.filter((section) => section.id !== sectionId);
@@ -121,7 +123,7 @@ export default function SubjectSelector () {
     
         targetSection.cardStyle =  {
             backgroundColor: cardColor,
-            color: cardColorBrightness > 120 ? '#2c2c2c' : '#FFFFFF',
+            color: '#FFFFFF',
             cursor: 'pointer'
         };
         
@@ -129,9 +131,22 @@ export default function SubjectSelector () {
         
         // Actualización del objeto con las asignaturas/secciones seleccionadas
         selectedSubjects.updater({...selectedSubjects.data, [targetSection.blockId]: [...selectedSubjects.data[targetSection.blockId], targetSection]});
+
+        if (sectionsCollision(targetSection, selectedSubjects.data[targetSection.blockId])) {
+            console.log('COLISIÓN');
+            NotificationManager.error(
+                'Has seleccionado una asignatura que produce un tope de horario.',
+                '¡Cuidado!',
+                2500
+            );
+        }
+
     };
 
     return <>
+    
+        <NotificationContainer/>
+
         <Card style={mainStyles.card}>
             <Card.Header style={mainStyles.cardHeader}>
                 <div className="text-center">Selección de asignatura y sección</div>
@@ -199,39 +214,9 @@ export default function SubjectSelector () {
                 
             </Card.Body>
         </Card>
-        <Card style={mainStyles.card}>
-            <Card.Header style={mainStyles.cardHeader}>
-                <div className="text-center">Asignaturas seleccionadas</div>
-            </Card.Header>
-            <Card.Body style={{overflowY: 'scroll', maxHeight: '1000px'}}>
-                Estas son las asignaturas que actualmente has seleccionado para la simulación.<br></br>
 
-                {Object.keys(selectedSubjects.data).map((blockId) => {
-                    return [
-                        <div className="mt-3" key={'selected-section-block-' + blockId}>
-                            <p><strong>Bloque {parseInt(blockId) + 1} ({blocks[blockId].startTime} - {blocks[blockId].endTime})</strong></p>
-                            <hr />
-                            {selectedSubjects.data[parseInt(blockId)].length !== 0 ? 
-                                <div>
-                                    {selectedSubjects.data[parseInt(blockId)].map((section) => {
-                                        return <div className="mt-3" key={'selected-section-' + section.id + '-' + blockId}>
-                                                - {subjects[section.subjectId].name}
-                                                {section.days.map((dayIndex) => {
-                                                    return <div>
-                                                        <Badge key={'section-' + section.id + '-day-badge-' + dayIndex} bg="secondary">{days[parseInt(dayIndex) - 1]}</Badge>
-                                                        </div>
-                                                })}
-                                            </div>
-                                    })}
-                                </div>
-                            
-                            : '---'}
 
-                        </div>
-                    ]
-                })}
+        <SelectedSections />
 
-            </Card.Body>
-        </Card>
     </>
 }

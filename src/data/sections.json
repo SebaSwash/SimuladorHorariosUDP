@@ -43,8 +43,8 @@
             "subjectId": "1",
             "teacher": "Bellino Alessio",
             "code": "02",
-            "days": [2, 3],
-            "blockId": 1,
+            "days": [1, 4],
+            "blockId": 2,
             "helpClass": {
                 "helper": "Ayudante de Alessio",
                 "days": [1],
